@@ -625,6 +625,7 @@ function! s:NewCatalogViewer(name, title)
     " according to the spawn mode. Valid buffer number must already have been
     " obtained before this is called.
     function! catalog_viewer.activate_viewport() dict
+        call s:_buffergator_messenger.send_warning("activate_viewport")
         let l:bfwn = bufwinnr(self.bufnum)
         if l:bfwn == winnr()
             " viewport wth buffer already active and current
@@ -1106,6 +1107,7 @@ function! s:NewBufferCatalogViewer()
     " to be repopulated; defaults to 1
     " Second argument, if given, should be number of calling window.
     function! catalog_viewer.open(...) dict
+        call s:_buffergator_messenger.send_warning("opening")
         " populate data
         if (a:0 == 0 || a:1 > 0)
             call self.update_buffers_info()
@@ -1929,6 +1931,7 @@ function! buffergator#CloseBuffergator()
 endfunction
 
 function! buffergator#ToggleBuffergator()
+    call s:_buffergator_messenger.send_warning("toggle")
     if s:is_buffergator_buffers_open
         call buffergator#CloseBuffergator()
     else
