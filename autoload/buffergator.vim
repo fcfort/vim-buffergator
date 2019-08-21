@@ -40,6 +40,9 @@ if !exists("g:buffergator_autoupdate")
 endif
 if !exists("g:buffergator_autoexpand_on_split")
     let g:buffergator_autoexpand_on_split = 1
+  endif
+if !exists("g:buffergator_autoresize_hsplit")
+    let g:buffergator_autoresize_hsplit = 0
 endif
 if exists("g:buffergator_split_size")
     if !exists("g:buffergator_vsplit_size")
@@ -637,7 +640,12 @@ function! s:NewCatalogViewer(name, title)
             if g:buffergator_viewport_split_policy =~ '[RrLl]' && g:buffergator_vsplit_size
                 execute("vertical resize " . g:buffergator_vsplit_size)
                 setlocal winfixwidth
+            elseif g:buffergator_viewport_split_policy =~ '[TtBb]' && g:buffergator_autoresize_hsplit && len(self.buffers_catalog) < g:buffergator_hsplit_size
+                call s:_buffergator_messenger.send_warning("autoresize")
+                execute("resize " . len(self.buffers_catalog))
+                setlocal winfixheight
             elseif g:buffergator_viewport_split_policy =~ '[TtBb]' && g:buffergator_hsplit_size
+                call s:_buffergator_messenger.send_warning("hsize")
                 execute("resize " . g:buffergator_hsplit_size)
                 setlocal winfixheight
             endif
